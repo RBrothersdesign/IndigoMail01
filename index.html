@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Preparar correo · Casa Índigo</title>
+<style>body{font:16px/1.5 system-ui,sans-serif;margin:0;background:#f4f4f7;color:#222}main{max-width:900px;margin:32px auto;padding:0 20px}h1{font-size:25px}button,a.button{font:inherit;border:0;border-radius:8px;padding:12px 18px;background:#7548fa;color:white;cursor:pointer;text-decoration:none;display:inline-block;margin:4px 6px 4px 0}button:disabled{opacity:.45;cursor:default}#status{min-height:48px}iframe{display:block;border:0;background:white;width:100%;height:1400px}small{display:block;color:#555}code{overflow-wrap:anywhere}</style></head>
+<body><main><h1>Tu correo de Casa Índigo</h1><p>Cuando esta carpeta esté publicada, copia el correo y pégalo en un mensaje nuevo de Gmail desde tu computador.</p>
+<button id="copy" disabled>Copiar correo para Gmail</button><button id="download" disabled>Descargar HTML con URLs públicas</button><a class="button" href="email.html" target="_blank">Ver solo el correo</a>
+<p id="status" role="status">Cargando…</p><small>La vista de abajo es el correo. Estos controles no se copian. Conserva la carpeta assets publicada para que las imágenes sigan disponibles.</small><iframe title="Vista previa del correo" src="email.html"></iframe></main>
+<script>
+let markup='';
+const status=document.getElementById('status'),copy=document.getElementById('copy'),download=document.getElementById('download');
+async function prepare(){
+ if(!/^https?:$/.test(location.protocol)){status.textContent='Para copiarlo a Gmail, publica esta carpeta y abre esta página desde su URL pública. Puedes revisar el diseño con “Ver solo el correo”.';return;}
+ try{const response=await fetch('email.html');if(!response.ok)throw Error('HTML no disponible');const doc=new DOMParser().parseFromString(await response.text(),'text/html');doc.querySelectorAll('img').forEach(img=>img.setAttribute('src',new URL(img.getAttribute('src'),location.href).href));markup='<!doctype html>\n'+doc.documentElement.outerHTML;copy.disabled=false;download.disabled=false;status.textContent='Listo. Copia el correo, abre Redactar en Gmail y pega con Ctrl+V. Envía primero una prueba a tu propia dirección.';}catch(e){status.textContent='No se pudo cargar email.html. Comprueba que subiste la carpeta completa.';}
+}
+copy.onclick=async()=>{try{const doc=new DOMParser().parseFromString(markup,'text/html');await navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([doc.body.innerHTML],{type:'text/html'}),'text/plain':new Blob(['Casa Índigo · Escuela de Artes y Bienestar\n313 789 7526 · 312 465 0493\nhttps://linktr.ee/qr/845da2ae-3aa2-46e1-9343-692a06bb71f6'],{type:'text/plain'})})]);status.textContent='Copiado. Pégalo en el cuerpo de un mensaje nuevo de Gmail con Ctrl+V (pegado normal).';}catch(e){status.textContent='El navegador no permitió copiar. Abre “Ver solo el correo”, selecciona todo con Ctrl+A, copia con Ctrl+C y pega en Gmail con Ctrl+V. Hazlo desde la página publicada.';}};
+download.onclick=()=>{const url=URL.createObjectURL(new Blob([markup],{type:'text/html;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='email-casa-indigo-publico.html';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
+prepare();
+</script></body></html>
