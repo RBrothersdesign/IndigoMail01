@@ -1,8 +1,0 @@
-VERIFICACIÓN REALIZADA
-- Inspección visual del PDF maestro y del HTML en escritorio y móvil.
-- Las 13 piezas PNG reconstruyen la exportación del PDF sin diferencias de píxeles.
-- Anchos comprobados: 640, 375 y 320 px; todas las imágenes cargan, sin desbordamiento horizontal.
-- QR y dos teléfonos: tres enlaces independientes con destinos verificados en el HTML.
-- Botón Copiar: comprobado en navegador local con origen HTTPS de prueba; portapapeles HTML con URLs absolutas y sin scripts.
-- Descargar HTML: comprobado; URLs absolutas y sin scripts.
-- Pendiente del usuario: publicación real y envío de prueba desde Gmail. No se afirma validación de entrega en Gmail/Outlook.
